@@ -14,6 +14,7 @@
       align-items: center;
       justify-content: center;
       height: 100vh;
+      margin: 0;
       text-align: center;
     }
 
@@ -81,5 +82,32 @@
   </div>
 
   <script>
-    const countDownDate =
+    // Set countdown to 25 April 2026, 9:00 AM UK time
+    const countDownDate = new Date(Date.UTC(2026, 3, 25, 8, 0, 0)).getTime();
+    // (UK is UTC+1 in April, so 8 AM UTC = 9 AM UK time)
+
+    const timer = setInterval(function() {
+      const now = new Date().getTime();
+      const distance = countDownDate - now;
+
+      const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+      const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+      document.getElementById("days").textContent = days.toString().padStart(2, '0');
+      document.getElementById("hours").textContent = hours.toString().padStart(2, '0');
+      document.getElementById("minutes").textContent = minutes.toString().padStart(2, '0');
+      document.getElementById("seconds").textContent = seconds.toString().padStart(2, '0');
+
+      if (distance < 0) {
+        clearInterval(timer);
+        document.getElementById("countdown").innerHTML = "<h2>🎉 Tickets Are Now Live!</h2>";
+        document.getElementById("ticket").classList.remove("hidden");
+      }
+    }, 1000);
+  </script>
+</body>
+</html>
+
 
