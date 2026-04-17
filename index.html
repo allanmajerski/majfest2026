@@ -4,76 +4,16 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Maj Fest 2026 - Tickets</title>
-  <style>
-    body {
-      font-family: 'Arial Black', Arial, sans-serif;
-      color: white;
-      text-align: center;
-      margin: 0;
-      padding: 20px;
-      min-height: 100vh;
-      /* Correct, tested background setup */
-      background-image:
-        linear-gradient(135deg, rgba(102,126,234,0.7), rgba(118,75,162,0.7)),
-        url("[images.unsplash.com](https://images.unsplash.com/photo-1507874457470-272b3c8d8ee2?auto=format&fit=crop&w=1920&q=80)");
-      background-size: cover;
-      background-position: center;
-      background-repeat: no-repeat;
-      background-attachment: fixed;
-    }
-    .container {
-      max-width: 800px;
-      margin: 0 auto;
-      padding: 40px 20px;
-    }
-    h1 {
-      font-size: 4em;
-      margin-bottom: 10px;
-      text-shadow: 3px 3px 6px rgba(0,0,0,0.5);
-      text-transform: uppercase;
-    }
-    p.subtitle {
-      font-size: 1.5em;
-      margin-bottom: 40px;
-    }
-    .countdown-box {
-      background: rgba(255,255,255,0.1);
-      border-radius: 20px;
-      padding: 40px;
-      backdrop-filter: blur(10px);
-    }
-    .countdown-wrapper {
-      display: flex;
-      justify-content: center;
-      gap: 20px;
-      flex-wrap: wrap;
-      margin-top: 20px;
-    }
-    .time-unit {
-      background: rgba(255,255,255,0.2);
-      border-radius: 15px;
-      padding: 20px;
-      min-width: 90px;
-    }
-    .number {
-      font-size: 3em;
-      font-weight: bold;
-      display: block;
-    }
-    .label {
-      font-size: 1em;
-      text-transform: uppercase;
-      margin-top: 5px;
-      display: block;
-    }
-  </style>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
   <div class="container">
     <h1>MAJ FEST 2026</h1>
     <p class="subtitle">Allan's 50th Birthday Festival Experience</p>
+
     <div class="countdown-box">
       <h2>TICKETS ON SALE</h2>
+
       <div class="countdown-wrapper" id="timer-display">
         <div class="time-unit">
           <span class="number" id="days">00</span>
@@ -94,28 +34,35 @@
       </div>
     </div>
   </div>
+
   <script>
+    // Countdown to 25 April 2026 at 09:00 local time
     const targetDate = new Date("2026-04-25T09:00:00").getTime();
+
     function updateTimer() {
       const now = new Date().getTime();
       const distance = targetDate - now;
+
       if (distance < 0) {
-        document.getElementById("timer-display").innerHTML = "<h3>TICKETS ARE NOW AVAILABLE!</h3>";
+        document.getElementById("timer-display").innerHTML =
+          '<h3>🎉 TICKETS ARE NOW AVAILABLE!</h3>' +
+          '<a href="tickets.html" style="display:inline-block;margin-top:20px;background:#ffdc64;color:#000;padding:15px 25px;border-radius:40px;font-weight:bold;text-decoration:none;box-shadow:0 4px 10px rgba(0,0,0,0.3);">GET YOUR TICKETS</a>';
         return;
       }
+
       const days = Math.floor(distance / (1000 * 60 * 60 * 24));
       const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
       const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
       const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
       document.getElementById("days").innerText = days;
       document.getElementById("hours").innerText = hours;
       document.getElementById("minutes").innerText = minutes;
       document.getElementById("seconds").innerText = seconds;
     }
+
     updateTimer();
     setInterval(updateTimer, 1000);
   </script>
 </body>
 </html>
-
-
