@@ -3,155 +3,83 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Maj Fest 2026 – Tickets | Allan’s 50th</title>
+  <title>Maj Fest 2026 - Allan's 50th Birthday Festival Experience</title>
   <style>
-    @import url('[fonts.googleapis.com](https://fonts.googleapis.com/css2?family=Bungee+Shade&family=Open+Sans:wght@400;700&display=swap)');
-
     body {
-      margin: 0;
-      height: 100vh;
-      font-family: 'Open Sans', sans-serif;
+      font-family: Arial, sans-serif;
+      background-color: #111;
       color: #fff;
-      background: linear-gradient(135deg, #ff4e50, #f9d423);
-      background-size: 400% 400%;
-      animation: gradientMove 12s ease infinite;
       display: flex;
       flex-direction: column;
-      justify-content: center;
       align-items: center;
+      justify-content: center;
+      height: 100vh;
       text-align: center;
     }
 
-    @keyframes gradientMove {
-      0% { background-position: 0% 50%; }
-      50% { background-position: 100% 50%; }
-      100% { background-position: 0% 50%; }
-    }
-
     h1 {
-      font-family: 'Bungee Shade', cursive;
-      font-size: 3rem;
-      margin: 0;
-      text-transform: uppercase;
-      letter-spacing: 3px;
+      font-size: 2.5rem;
+      margin-bottom: 10px;
     }
 
     h2 {
-      font-size: 1.5rem;
-      margin-top: 10px;
-      font-weight: normal;
+      font-size: 1.2rem;
+      color: #bbb;
+      margin-bottom: 40px;
     }
 
     #countdown {
-      margin-top: 50px;
       font-size: 2rem;
       display: flex;
       gap: 20px;
       justify-content: center;
     }
 
-    .time-box {
-      background: rgba(0, 0, 0, 0.4);
-      padding: 20px 30px;
-      border-radius: 10px;
-      box-shadow: 0 0 20px rgba(255,255,255,0.2);
+    .time {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
     }
 
-    .label {
-      display: block;
-      font-size: 0.8rem;
-      margin-top: 5px;
-      letter-spacing: 1px;
+    .time span {
+      font-size: 2.5rem;
+      font-weight: bold;
+      color: #ffcc00;
     }
 
     #ticket {
-      margin-top: 50px;
+      margin-top: 40px;
     }
 
     .btn {
-      background: #fff44f;
-      color: #000;
+      background: #ffcc00;
+      color: #111;
       padding: 15px 25px;
-      border-radius: 50px;
+      border-radius: 5px;
       text-decoration: none;
       font-weight: bold;
-      letter-spacing: 1px;
-      transition: transform 0.2s, background 0.3s;
     }
 
-    .btn:hover {
-      background: #00ffcc;
-      transform: scale(1.05);
+    .hidden {
+      display: none;
     }
-
-    /* Decorative bunting flags at top */
-    .flags {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      padding: 10px 0;
-      background: repeating-linear-gradient(45deg, #00ffcc, #00ffcc 10px, #ff4e50 10px, #ff4e50 20px, #fff44f 20px, #fff44f 30px);
-      clip-path: polygon(0 0, 100% 0, 100% 50%, 95% 100%, 90% 50%, 85% 100%, 80% 50%, 75% 100%, 70% 50%, 65% 100%, 60% 50%, 55% 100%, 50% 50%, 45% 100%, 40% 50%, 35% 100%, 30% 50%, 25% 100%, 20% 50%, 15% 100%, 10% 50%, 5% 100%, 0 50%);
-    }
-
-    .hidden { display: none; }
   </style>
 </head>
 <body>
-  <div class="flags"></div>
-
-  <h1>Maj Fest 2026</h1>
-  <h2>Allan’s 50th Birthday Festival Experience</h2>
+  <h1>Maj Fest 2026</h1>
+  <h2>Allan's 50th Birthday Festival Experience</h2>
 
   <div id="countdown">
-    <div class="time-box">
-      <span id="days">00</span>
-      <span class="label">Days</span>
-    </div>
-    <div class="time-box">
-      <span id="hours">00</span>
-      <span class="label">Hours</span>
-    </div>
-    <div class="time-box">
-      <span id="minutes">00</span>
-      <span class="label">Minutes</span>
-    </div>
-    <div class="time-box">
-      <span id="seconds">00</span>
-      <span class="label">Seconds</span>
-    </div>
+    <div class="time"><span id="days">00</span>Days</div>
+    <div class="time"><span id="hours">00</span>Hours</div>
+    <div class="time"><span id="minutes">00</span>Minutes</div>
+    <div class="time"><span id="seconds">00</span>Seconds</div>
   </div>
 
   <div id="ticket" class="hidden">
-    <a href="tickets.html" class="btn">🎟 Get Your Tickets</a>
+    <a href="tickets.html" class="btn">🎟 Get Your Tickets</a>
   </div>
 
   <script>
-    // set your ticket release date/time here
-    const countdownDate = new Date("May 15, 2026 18:00:00").getTime();
+    const countDownDate =
 
-    const timer = setInterval(() => {
-      const now = new Date().getTime();
-      const distance = countdownDate - now;
-
-      const days = Math.floor(distance / (1000 * 60 * 60 * 24));
-      const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-      const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-      const seconds = Math.floor((distance % (1000 * 60)) / 1000);
-
-      document.getElementById("days").textContent = days.toString().padStart(2,'0');
-      document.getElementById("hours").textContent = hours.toString().padStart(2,'0');
-      document.getElementById("minutes").textContent = minutes.toString().padStart(2,'0');
-      document.getElementById("seconds").textContent = seconds.toString().padStart(2,'0');
-
-      // when countdown ends
-      if (distance < 0) {
-        clearInterval(timer);
-        document.getElementById("countdown").innerHTML = "<h2>🎉 Tickets Are Now Live!</h2>";
-        document.getElementById("ticket").classList.remove("hidden");
-      }
-    }, 1000);
-  </script>
-</body>
-</html>
