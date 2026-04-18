@@ -39,6 +39,13 @@
       margin-bottom: 40px;
     }
 
+    .festival-date {
+      font-size: 1.3em;
+      font-weight: bold;
+      margin-bottom: 40px;
+      color: #ffdc64;
+    }
+
     .countdown-box {
       background: rgba(255,255,255,0.1);
       border-radius: 20px;
@@ -74,7 +81,26 @@
       display: block;
     }
 
-    /* 🎧 Fixed bottom Spotify bar */
+    /* Ticket button */
+    .ticket-button {
+      background: #ffdc64;
+      color: #000;
+      font-weight: bold;
+      padding: 15px 30px;
+      border-radius: 40px;
+      text-decoration: none;
+      display: inline-block;
+      margin-top: 30px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+      transition: transform 0.2s;
+    }
+
+    .ticket-button:hover {
+      transform: scale(1.05);
+      background: #fff44f;
+    }
+
+    /* Spotify bar */
     .spotify-player {
       position: fixed;
       bottom: 20px;
@@ -90,10 +116,8 @@
 <body>
   <div class="container">
     <h1>MAJ FEST 2026</h1>
-
-    <!-- 🎉 Festival Date Added -->
     <p class="festival-date">27th June 2026</p>
-    
+
     <div class="countdown-box">
       <h2>TICKETS ON SALE</h2>
 
@@ -115,19 +139,25 @@
           <span class="label">Seconds</span>
         </div>
       </div>
+
+      <!-- Hidden ticket button that appears when the countdown ends -->
+      <div id="ticket-button-box" style="display:none;">
+        <a href="tickets.html" class="ticket-button">🎟 Get Your Tickets 🎟</a>
+      </div>
     </div>
   </div>
 
-  <!-- 🎧 Spotify Player fixed at bottom -->
+  <!-- Spotify Player -->
   <div class="spotify-player">
     <iframe style="border-radius:12px"
-      src="https://open.spotify.com/embed/track/6vZZtivPrtpggT5SSXsYTy?utm_source=generator"
+      src="[open.spotify.com](https://open.spotify.com/embed/track/6vZZtivPrtpggT5SSXsYTy?utm_source=generator)"
       width="100%" height="152" frameBorder="0"
       allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture">
     </iframe>
   </div>
 
   <script>
+    // Countdown to 25 April 2026 at 09:00 local time
     const targetDate = new Date("2026-04-25T09:00:00").getTime();
 
     function updateTimer() {
@@ -135,8 +165,8 @@
       const distance = targetDate - now;
 
       if (distance < 0) {
-        document.getElementById("timer-display").innerHTML =
-          "<h3>TICKETS ARE NOW AVAILABLE!</h3>";
+        document.getElementById("timer-display").innerHTML = "<h3>🎉 Tickets Are Now Live!</h3>";
+        document.getElementById("ticket-button-box").style.display = "block";
         return;
       }
 
@@ -156,6 +186,7 @@
   </script>
 </body>
 </html>
+
 
 
 
