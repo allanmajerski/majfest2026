@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <img src="logo.jpg" alt="Maj Fest 2026 Logo" class="logo" />
   <title>Tickets</title>
+
   <style>
     body {
       font-family: 'Arial Black', Arial, sans-serif;
@@ -22,21 +22,29 @@
       background-attachment: fixed;
     }
 
+    .logo {
+      width: 450px;
+      max-width: 90%;
+      height: auto;
+      display: block;
+      margin: 0 auto 20px;
+    }
+
     .container {
       max-width: 800px;
       margin: 0 auto;
-      padding: 40px 20px;
+      padding: 20px;
     }
 
     h1 {
-      font-size: 4em;
+      font-size: clamp(2rem, 6vw, 3.5rem);
       margin-bottom: 10px;
       text-shadow: 3px 3px 6px rgba(0,0,0,0.5);
       text-transform: uppercase;
     }
 
     p.subtitle {
-      font-size: 1.5em;
+      font-size: clamp(1rem, 4vw, 1.5rem);
       margin-bottom: 40px;
     }
 
@@ -45,33 +53,37 @@
       text-transform: uppercase;
       margin-bottom: 20px;
       letter-spacing: 1px;
+      font-size: clamp(1.2rem, 4vw, 2rem);
     }
 
     .section-box {
       background: rgba(255,255,255,0.1);
       border-radius: 20px;
-      padding: 40px;
+      padding: 30px 20px;
       backdrop-filter: blur(10px);
       margin-bottom: 40px;
     }
 
-    iframe {
-      border-radius: 10px;
+    /* Responsive Google Form */
+    .formframe {
       width: 100%;
-      max-width: 640px;
+      height: 80vh;
       border: none;
+      border-radius: 10px;
     }
 
     input, button {
       font-family: inherit;
       border: none;
       border-radius: 6px;
-      padding: 10px 15px;
+      padding: 12px 15px;
       font-size: 1rem;
+      margin-top: 10px;
     }
 
     input {
-      width: 250px;
+      width: 80%;
+      max-width: 260px;
     }
 
     button {
@@ -79,6 +91,7 @@
       color: #000;
       cursor: pointer;
       transition: transform 0.2s;
+      margin-left: 5px;
     }
 
     button:hover {
@@ -87,9 +100,12 @@
     }
 
     #ticketCanvas {
+      width: 100%;
+      max-width: 600px;
       display: none;
       margin-top: 20px;
       border-radius: 10px;
+      height: auto;
     }
 
     #downloadLink {
@@ -102,87 +118,88 @@
       text-decoration: none;
       box-shadow: 0 4px 10px rgba(0,0,0,0.3);
       margin-top: 20px;
+      display: inline-block;
     }
 
     a.back-link {
       display: inline-block;
-      margin-top: 50px;
+      margin-top: 40px;
       color: #ffdc64;
       text-decoration: none;
       font-weight: bold;
+      font-size: 1.2rem;
     }
 
     a.back-link:hover {
       text-decoration: underline;
     }
-
-    img.logo {
-      width: 500px;      /* adjust to taste */
-      max-width: 90%;    /* stays responsive on small screens */
-      height: auto;
-      display: block;
-      margin: 0 auto 30px;
-    }
-
   </style>
 </head>
+
 <body>
+
   <div class="container">
+
+    <!-- LOGO (correct placement) -->
+    <img src="logo.jpg" alt="Maj Fest 2026 Logo" class="logo">
 
     <!-- RSVP FORM -->
     <div class="section-box">
       <h1>Tickets</h1>
-      <iframe src="https://docs.google.com/forms/d/e/1FAIpQLSe4-Jb5RtISHjHlekmAhadNlCgd-d2cqB5M998HylmNZo7W4A/viewform?embedded=true" width="640" height="1221" frameborder="0" marginheight="0" marginwidth="0">Loading…</iframe>
+
+      <iframe
+        class="formframe"
+        src="https://docs.google.com/forms/d/e/1FAIpQLSe4-Jb5RtISHjHlekmAhadNlCgd-d2cqB5M998HylmNZo7W4A/viewform?embedded=true)">
+      </iframe>
     </div>
 
     <!-- TICKET GENERATOR -->
     <div class="section-box">
-      <h2>🎟 Generate Your Ticket</h2>
+      <h2>🎟 Generate Your Ticket</h2>
       <p>After RSVPing, type your name below to create your personalised festival pass!</p>
-      <input id="guestName" placeholder="Your Name" />
-      <button onclick="makeTicket()">Create Ticket</button><br />
 
-      <canvas id="ticketCanvas" width="600" height="300"></canvas><br />
-      <a id="downloadLink" download="MajFestTicket.png">Download My Ticket 🎟</a>
+      <input id="guestName" placeholder="Your Name">
+      <button onclick="makeTicket()">Create Ticket</button>
+
+      <canvas id="ticketCanvas" width="600" height="300"></canvas>
+      <a id="downloadLink" download="MajFestTicket.png">Download My Ticket 🎟</a>
     </div>
 
-    <a href="index.html" class="back-link">← Back to Countdown</a>
+    <a href="index.html" class="back-link">← Back to Countdown</a>
   </div>
 
   <script>
     function makeTicket() {
       const name = document.getElementById("guestName").value.trim();
       if (!name) return alert("Please enter your name!");
+
       const c = document.getElementById("ticketCanvas");
       const ctx = c.getContext("2d");
       c.style.display = "block";
 
-      // background gradient
       const gradient = ctx.createLinearGradient(0, 0, 600, 300);
       gradient.addColorStop(0, "#6A5ACD");
       gradient.addColorStop(1, "#8A2BE2");
       ctx.fillStyle = gradient;
       ctx.fillRect(0, 0, 600, 300);
 
-      // border
       ctx.strokeStyle = "#FFD700";
       ctx.lineWidth = 6;
       ctx.strokeRect(10, 10, 580, 280);
 
-      // text
       ctx.fillStyle = "white";
       ctx.font = "bold 28px Arial";
-      ctx.fillText("🎪 MAJ FEST 2026 🎪", 130, 100);
+      ctx.fillText("🎪 MAJ FEST 2026 🎪", 130, 100);
       ctx.font = "20px Arial";
-      ctx.fillText("Admit One: " + name, 150, 160);
-      ctx.fillText("Allan’s 50th Birthday Festival", 100, 200);
+      ctx.fillText("Admit One: " + name, 150, 160);
+      ctx.fillText("Allan's 50th Birthday Festival", 100, 200);
 
-      // download link
       const link = document.getElementById("downloadLink");
       link.href = c.toDataURL("image/png");
       link.style.display = "inline-block";
     }
   </script>
+
 </body>
 </html>
 
