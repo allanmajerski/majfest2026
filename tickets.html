@@ -1,4 +1,107 @@
-<!-- inside tickets.html -->
-<h2>Get Your Maj Fest Ticket 🎟</h2>
-<p>Fill out the form below to reserve your spot.</p>
-<iframe src="https://docs.google.com/forms/d/e/1FAIpQLSe4-Jb5RtISHjHlekmAhadNlCgd-d2cqB5M998HylmNZo7W4A/viewform?embedded=true" width="640" height="1221" frameborder="0" marginheight="0" marginwidth="0">Loading…</iframe>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Maj Fest 2026 – Tickets</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    input, button {
+      font-family: inherit;
+      border: none;
+      border-radius: 6px;
+      padding: 10px 15px;
+      font-size: 1rem;
+    }
+    input {
+      width: 250px;
+    }
+    button {
+      background: #ffcc00;
+      color: #000;
+      cursor: pointer;
+      transition: transform 0.2s;
+    }
+    button:hover {
+      transform: scale(1.05);
+    }
+    #generator {
+      margin-top: 60px;
+    }
+    #ticketCanvas {
+      display: none;
+      margin-top: 20px;
+      border-radius: 10px;
+    }
+    #downloadLink {
+      display: none;
+      background: #ffdc64;
+      color: #000;
+      padding: 12px 20px;
+      border-radius: 40px;
+      font-weight: bold;
+      text-decoration: none;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+      margin-top: 20px;
+      display: inline-block;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Maj Fest 2026</h1>
+    <p class="subtitle">Reserve your place at Allan’s 50th Birthday Festival Experience!</p>
+
+    <!-- RSVP Form (replace the iframe src with your real Google Form embed) -->
+    <div class="countdown-box">
+      <h2>RSVP Here</h2>
+      <iframe src="https://docs.google.com/forms/d/e/1FAIpQLSe4-Jb5RtISHjHlekmAhadNlCgd-d2cqB5M998HylmNZo7W4A/viewform?embedded=true" width="640" height="1221" frameborder="0" marginheight="0" marginwidth="0">Loading…</iframe>
+    </div>
+
+    <!-- Ticket Generator -->
+    <div id="generator" class="countdown-box">
+      <h2>🎟 Generate Your Personal Ticket</h2>
+      <p>Once you’ve RSVP’d, type your name below to download your official Maj Fest ticket!</p>
+      <input id="guestName" placeholder="Your Name" />
+      <button onclick="makeTicket()">Create Ticket</button><br />
+      <canvas id="ticketCanvas" width="600" height="300"></canvas><br />
+      <a id="downloadLink" download="MajFestTicket.png">Download My Ticket 🎟</a>
+    </div>
+  </div>
+
+  <script>
+    function makeTicket() {
+      const name = document.getElementById("guestName").value.trim();
+      if (!name) return alert("Please enter your name!");
+      const c = document.getElementById("ticketCanvas");
+      const ctx = c.getContext("2d");
+      c.style.display = "block";
+
+      // background
+      const gradient = ctx.createLinearGradient(0, 0, 600, 300);
+      gradient.addColorStop(0, "#6A5ACD");
+      gradient.addColorStop(1, "#8A2BE2");
+      ctx.fillStyle = gradient;
+      ctx.fillRect(0, 0, 600, 300);
+
+      // border
+      ctx.strokeStyle = "#FFD700";
+      ctx.lineWidth = 6;
+      ctx.strokeRect(10, 10, 580, 280);
+
+      // text
+      ctx.fillStyle = "white";
+      ctx.font = "bold 28px Arial";
+      ctx.fillText("🎪 MAJ FEST 2026 🎪", 130, 100);
+      ctx.font = "20px Arial";
+      ctx.fillText("Admit One: " + name, 150, 160);
+      ctx.fillText("Allan’s 50th Birthday Festival", 100, 200);
+
+      // download link
+      const link = document.getElementById("downloadLink");
+      link.href = c.toDataURL("image/png");
+      link.style.display = "inline-block";
+    }
+  </script>
+</body>
+</html>
