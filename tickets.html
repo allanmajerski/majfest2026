@@ -180,15 +180,48 @@
       box-shadow: 0 6px 30px rgba(255,215,0,0.6);
     }
 
+    /* Photo upload */
+    .photo-upload-label {
+      display: inline-block;
+      margin-top: 16px;
+      background: rgba(255,255,255,0.12);
+      border: 2px dashed rgba(255,215,0,0.5);
+      border-radius: 16px;
+      padding: 16px 28px;
+      cursor: pointer;
+      color: rgba(255,255,255,0.75);
+      font-size: 0.95rem;
+      transition: border-color 0.2s, background 0.2s;
+    }
+
+    .photo-upload-label:hover {
+      border-color: var(--gold);
+      background: rgba(255,215,0,0.08);
+      color: white;
+    }
+
+    #photoUpload { display: none; }
+
+    #photoPreview {
+      display: none;
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 3px solid var(--gold);
+      margin: 12px auto 0;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.4);
+    }
+
     /* Canvas ticket */
     #ticketCanvas {
       display: none;
       width: 100%;
-      max-width: 580px;
+      max-width: 620px;
       height: auto;
       margin: 24px auto 0;
       border-radius: 14px;
-      box-shadow: 0 8px 40px rgba(0,0,0,0.5);
+      box-shadow: 0 8px 40px rgba(0,0,0,0.6);
     }
 
     .download-btn {
@@ -246,7 +279,7 @@
     <!-- RSVP FORM -->
     <div class="card">
       <div class="card-title">📋 RSVP</div>
-      <p class="card-sub">Fill in the form below to grab your spot at MajFest 2026 — Allan's legendary 50th birthday festival!</p>
+      <p class="card-sub">Fill in the form below to grab your spot at MajFest 2026</p>
       <hr class="divider">
       <iframe
         class="formframe"
@@ -257,17 +290,29 @@
     <!-- TICKET GENERATOR -->
     <div class="card">
       <div class="card-title">🎟 Your Festival Pass</div>
-      <p class="card-sub">After RSVPing above, enter your name to generate your personalised MajFest wristband ticket!</p>
+      <p class="card-sub">After RSVPing above, enter your name to generate your MajFest wristband ticket</p>
       <hr class="divider">
 
       <div class="input-row">
         <input class="name-input" id="guestName" type="text" placeholder="Enter your name…" maxlength="30" />
-        <button class="gen-btn" onclick="makeTicket()">Generate Ticket ✨</button>
       </div>
 
-      <canvas id="ticketCanvas" width="580" height="290"></canvas>
+      <div style="margin-top: 16px;">
+        <label class="photo-upload-label" for="photoUpload">
+          📷 Upload Your Photo
+        </label>
+        <input type="file" id="photoUpload" accept="image/*" onchange="previewPhoto(event)" />
+        <br>
+        <img id="photoPreview" src="" alt="Your photo preview" />
+      </div>
+
+      <div style="margin-top: 20px;">
+        <button class="gen-btn" onclick="makeTicket()">Generate My Festival Pass ✨</button>
+      </div>
+
+      <canvas id="ticketCanvas" width="620" height="340"></canvas>
       <br>
-      <a class="download-btn" id="downloadLink" download="MajFest2026_Ticket.png">⬇ Download My Ticket</a>
+      <a class="download-btn" id="downloadLink" download="MajFest2026_Pass.png">⬇ Download My Festival Pass</a>
     </div>
 
     <a href="index.html" class="back-link">← Back to Countdown</a>
@@ -275,114 +320,268 @@
   </div>
 
   <script>
+    let uploadedPhoto = null;
+
+    function previewPhoto(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const preview = document.getElementById("photoPreview");
+        preview.src = e.target.result;
+        preview.style.display = "block";
+        const img = new Image();
+        img.onload = () => { uploadedPhoto = img; };
+        img.src = e.target.result;
+      };
+      reader.readAsDataURL(file);
+    }
+
     function makeTicket() {
       const name = document.getElementById("guestName").value.trim();
       if (!name) { alert("Please enter your name first!"); return; }
 
       const canvas = document.getElementById("ticketCanvas");
       const ctx = canvas.getContext("2d");
-      const W = 580, H = 290;
+      const W = 620, H = 340;
       canvas.width = W; canvas.height = H;
 
-      // Background gradient
+      // --- BACKGROUND: earthy Glastonbury feel ---
+      // Deep olive/brown base
       const bg = ctx.createLinearGradient(0, 0, W, H);
-      bg.addColorStop(0, "#2d006e");
-      bg.addColorStop(0.5, "#5a0080");
-      bg.addColorStop(1, "#0d004d");
+      bg.addColorStop(0,   "#1a1200");
+      bg.addColorStop(0.4, "#2e1f00");
+      bg.addColorStop(1,   "#0f1a0a");
       ctx.fillStyle = bg;
-      ctx.roundRect(0, 0, W, H, 16);
+      ctx.roundRect(0, 0, W, H, 18);
       ctx.fill();
 
-      // Gold border
-      ctx.strokeStyle = "#FFD700";
-      ctx.lineWidth = 4;
-      ctx.roundRect(6, 6, W - 12, H - 12, 12);
+      // Subtle mud-field texture stripes
+      for (let i = 0; i < H; i += 4) {
+        ctx.fillStyle = `rgba(255,255,255,${Math.random() * 0.012})`;
+        ctx.fillRect(0, i, W, 1);
+      }
+
+      // Top colour band — festival wristband rainbow stripe
+      const bandH = 10;
+      const bandColors = ["#c0392b","#e67e22","#f1c40f","#27ae60","#2980b9","#8e44ad"];
+      const bw = W / bandColors.length;
+      bandColors.forEach((c, i) => {
+        ctx.fillStyle = c;
+        ctx.fillRect(i * bw, 0, bw + 1, bandH);
+      });
+
+      // Outer border — aged cream/gold
+      ctx.strokeStyle = "#c8a84b";
+      ctx.lineWidth = 3;
+      ctx.roundRect(4, 4, W - 8, H - 8, 16);
       ctx.stroke();
 
-      // Left colour bar
-      const bar = ctx.createLinearGradient(0, 0, 0, H);
-      bar.addColorStop(0, "#FF4081");
-      bar.addColorStop(0.33, "#FFD700");
-      bar.addColorStop(0.66, "#00E676");
-      bar.addColorStop(1, "#2979FF");
-      ctx.fillStyle = bar;
-      ctx.fillRect(14, 14, 14, H - 28);
+      // Inner border — thin rust
+      ctx.strokeStyle = "rgba(180,100,20,0.4)";
+      ctx.lineWidth = 1;
+      ctx.roundRect(12, 14, W - 24, H - 22, 12);
+      ctx.stroke();
 
-      // Dashed tear line
-      ctx.setLineDash([6, 4]);
-      ctx.strokeStyle = "rgba(255,215,0,0.4)";
+      // Dashed tear line (vertical, right stub)
+      ctx.setLineDash([5, 4]);
+      ctx.strokeStyle = "rgba(200,168,75,0.35)";
       ctx.lineWidth = 1.5;
       ctx.beginPath();
-      ctx.moveTo(W - 120, 20);
-      ctx.lineTo(W - 120, H - 20);
+      ctx.moveTo(W - 130, 18);
+      ctx.lineTo(W - 130, H - 14);
       ctx.stroke();
       ctx.setLineDash([]);
 
-      // Festival name
-      ctx.fillStyle = "#FFD700";
-      ctx.font = "bold 36px 'Arial Black', Arial, sans-serif";
-      ctx.textAlign = "left";
-      ctx.fillText("🎪 MAJ FEST 2026", 44, 68);
-
-      // Tagline
-      ctx.fillStyle = "rgba(255,255,255,0.55)";
+      // ✂ scissor icon on tear line
+      ctx.fillStyle = "rgba(200,168,75,0.5)";
       ctx.font = "14px Arial";
-      ctx.fillText("Allan's 50th Birthday Festival  ·  27 June 2026", 44, 95);
-
-      // Divider line
-      ctx.strokeStyle = "rgba(255,215,0,0.3)";
-      ctx.lineWidth = 1;
-      ctx.beginPath();
-      ctx.moveTo(44, 108);
-      ctx.lineTo(W - 130, 108);
-      ctx.stroke();
-
-      // Name label
-      ctx.fillStyle = "rgba(255,255,255,0.5)";
-      ctx.font = "12px Arial";
-      ctx.fillText("TICKET HOLDER", 44, 130);
-
-      // Guest name
-      ctx.fillStyle = "#ffffff";
-      ctx.font = "bold 28px 'Arial Black', Arial, sans-serif";
-      ctx.fillText(name.toUpperCase(), 44, 162);
-
-      // Ticket type
-      ctx.fillStyle = "#00E676";
-      ctx.font = "bold 13px Arial";
-      ctx.fillText("✔ GENERAL ADMISSION", 44, 190);
-
-      // Garden / outdoor
-      ctx.fillStyle = "rgba(255,255,255,0.4)";
-      ctx.font = "12px Arial";
-      ctx.fillText("Venue: Private Garden  ·  Staines, England", 44, 212);
-
-      // Stub (right side)
       ctx.textAlign = "center";
-      ctx.fillStyle = "#FFD700";
-      ctx.font = "bold 14px 'Arial Black', Arial, sans-serif";
-      ctx.fillText("ADMIT", W - 60, 120);
-      ctx.font = "bold 28px 'Arial Black', Arial, sans-serif";
-      ctx.fillText("ONE", W - 60, 152);
-      ctx.font = "11px Arial";
-      ctx.fillStyle = "rgba(255,255,255,0.45)";
-      ctx.fillText("KEEP THIS", W - 60, 175);
-      ctx.fillText("STUB", W - 60, 190);
+      ctx.fillText("✂", W - 130, 32);
 
-      // Barcode-style lines
-      const bx = W - 105, by = 205;
-      const widths = [2,1,3,1,2,1,1,3,2,1,2,1,3,1,2];
-      let bxOffset = bx;
-      widths.forEach((w, i) => {
-        ctx.fillStyle = i % 2 === 0 ? "rgba(255,215,0,0.8)" : "transparent";
-        if (i % 2 === 0) {
-          ctx.fillRect(bxOffset, by, w * 2, 30);
-        }
-        bxOffset += w * 2 + 2;
+      // --- PYRAMID ICON (Glastonbury signature) ---
+      const px = 44, py = 28, pw = 50;
+      ctx.beginPath();
+      ctx.moveTo(px + pw / 2, py);
+      ctx.lineTo(px + pw, py + 36);
+      ctx.lineTo(px, py + 36);
+      ctx.closePath();
+      const pyGrad = ctx.createLinearGradient(px, py, px + pw, py + 36);
+      pyGrad.addColorStop(0, "#f1c40f");
+      pyGrad.addColorStop(1, "#c0392b");
+      ctx.fillStyle = pyGrad;
+      ctx.fill();
+
+      // Stars around pyramid
+      ["★","★","★"].forEach((s, i) => {
+        ctx.fillStyle = "#f1c40f";
+        ctx.font = "10px Arial";
+        ctx.textAlign = "left";
+        ctx.fillText(s, px - 14 + i * 38, py + 10 + (i % 2) * 8);
       });
 
-      canvas.style.display = "block";
+      // --- FESTIVAL NAME ---
+      ctx.textAlign = "left";
+      ctx.fillStyle = "#f1c40f";
+      ctx.font = "bold 32px 'Arial Black', Georgia, serif";
+      ctx.shadowColor = "rgba(241,196,15,0.4)";
+      ctx.shadowBlur = 10;
+      ctx.fillText("MAJ FEST 2026", 106, 62);
+      ctx.shadowBlur = 0;
 
+      // Tagline
+      ctx.fillStyle = "rgba(220,200,150,0.65)";
+      ctx.font = "italic 13px Georgia, serif";
+      ctx.fillText("Allan's 50th Birthday Festival", 108, 82);
+
+      // Divider rule
+      ctx.strokeStyle = "rgba(200,168,75,0.3)";
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.moveTo(26, 96);
+      ctx.lineTo(W - 140, 96);
+      ctx.stroke();
+
+      // --- DATE & VENUE ---
+      ctx.fillStyle = "rgba(220,200,150,0.5)";
+      ctx.font = "11px Arial";
+      ctx.fillText("DATE", 26, 114);
+      ctx.fillStyle = "#e8d5a0";
+      ctx.font = "bold 14px Georgia, serif";
+      ctx.fillText("Saturday 27th June 2026", 26, 132);
+
+      ctx.fillStyle = "rgba(220,200,150,0.5)";
+      ctx.font = "11px Arial";
+      ctx.fillText("VENUE", 26, 154);
+      ctx.fillStyle = "#e8d5a0";
+      ctx.font = "bold 14px Georgia, serif";
+      ctx.fillText("22 Cleveland Avenue, Hampton", 26, 172);
+
+      // Second divider
+      ctx.strokeStyle = "rgba(200,168,75,0.3)";
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.moveTo(26, 184);
+      ctx.lineTo(W - 140, 184);
+      ctx.stroke();
+
+      // --- TICKET HOLDER NAME ---
+      ctx.fillStyle = "rgba(220,200,150,0.5)";
+      ctx.font = "11px Arial";
+      ctx.fillText("TICKET HOLDER", 26, 202);
+
+      ctx.fillStyle = "#ffffff";
+      ctx.font = "bold 26px 'Arial Black', Georgia, serif";
+      ctx.shadowColor = "rgba(255,255,255,0.2)";
+      ctx.shadowBlur = 6;
+      ctx.fillText(name.toUpperCase(), 26, 230);
+      ctx.shadowBlur = 0;
+
+      // GENERAL ADMISSION badge
+      const badgeX = 26, badgeY = 244;
+      ctx.fillStyle = "#27ae60";
+      ctx.roundRect(badgeX, badgeY, 160, 24, 12);
+      ctx.fill();
+      ctx.fillStyle = "#fff";
+      ctx.font = "bold 11px Arial";
+      ctx.textAlign = "center";
+      ctx.fillText("✔  GENERAL ADMISSION", badgeX + 80, badgeY + 16);
+      ctx.textAlign = "left";
+
+      // --- PHOTO (bottom right, just left of tear line) ---
+      const photoSize = 70;
+      const photoX = W - 130 - photoSize - 12;
+      const photoY = H - photoSize - 18;
+
+      if (uploadedPhoto) {
+        // Circular clip
+        ctx.save();
+        ctx.beginPath();
+        ctx.arc(photoX + photoSize / 2, photoY + photoSize / 2, photoSize / 2, 0, Math.PI * 2);
+        ctx.clip();
+        ctx.drawImage(uploadedPhoto, photoX, photoY, photoSize, photoSize);
+        ctx.restore();
+        // Circle border
+        ctx.strokeStyle = "#c8a84b";
+        ctx.lineWidth = 2.5;
+        ctx.beginPath();
+        ctx.arc(photoX + photoSize / 2, photoY + photoSize / 2, photoSize / 2, 0, Math.PI * 2);
+        ctx.stroke();
+      } else {
+        // Placeholder circle
+        ctx.strokeStyle = "rgba(200,168,75,0.4)";
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.arc(photoX + photoSize / 2, photoY + photoSize / 2, photoSize / 2, 0, Math.PI * 2);
+        ctx.stroke();
+        ctx.fillStyle = "rgba(200,168,75,0.15)";
+        ctx.fill();
+        ctx.fillStyle = "rgba(220,200,150,0.4)";
+        ctx.font = "22px Arial";
+        ctx.textAlign = "center";
+        ctx.fillText("👤", photoX + photoSize / 2, photoY + photoSize / 2 + 8);
+        ctx.textAlign = "left";
+      }
+
+      // --- STUB (right side) ---
+      ctx.textAlign = "center";
+      const stubX = W - 65;
+
+      // Stub heading
+      ctx.fillStyle = "#f1c40f";
+      ctx.font = "bold 11px Arial";
+      ctx.fillText("ADMIT", stubX, 55);
+      ctx.font = "bold 30px 'Arial Black', Arial";
+      ctx.fillText("ONE", stubX, 88);
+
+      // Mini pyramid in stub
+      const spx = stubX - 18, spy = 100, spw = 36;
+      ctx.beginPath();
+      ctx.moveTo(spx + spw / 2, spy);
+      ctx.lineTo(spx + spw, spy + 26);
+      ctx.lineTo(spx, spy + 26);
+      ctx.closePath();
+      ctx.fillStyle = "rgba(241,196,15,0.6)";
+      ctx.fill();
+
+      // Stub divider
+      ctx.strokeStyle = "rgba(200,168,75,0.3)";
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.moveTo(W - 120, 138);
+      ctx.lineTo(W - 14, 138);
+      ctx.stroke();
+
+      // Date in stub
+      ctx.fillStyle = "rgba(220,200,150,0.55)";
+      ctx.font = "10px Arial";
+      ctx.fillText("27 JUNE", stubX, 155);
+      ctx.fillText("2026", stubX, 170);
+
+      // Barcode
+      const bcY = H - 80, bcX = W - 118;
+      const bars = [3,1,2,1,4,1,2,1,3,1,2,1,3,1,2,1,1];
+      let bOff = bcX;
+      bars.forEach((bw2, i) => {
+        ctx.fillStyle = i % 2 === 0
+          ? "rgba(220,200,150,0.85)"
+          : "transparent";
+        if (i % 2 === 0) ctx.fillRect(bOff, bcY, bw2 * 2.5, 38);
+        bOff += bw2 * 2.5 + 1;
+      });
+      ctx.fillStyle = "rgba(220,200,150,0.35)";
+      ctx.font = "8px Arial";
+      ctx.fillText("MAJFEST-2026", stubX, bcY + 50);
+
+      // KEEP THIS STUB text
+      ctx.fillStyle = "rgba(220,200,150,0.35)";
+      ctx.font = "9px Arial";
+      ctx.fillText("KEEP THIS STUB", stubX, H - 20);
+
+      ctx.textAlign = "left";
+
+      // Show canvas & download
+      canvas.style.display = "block";
       const link = document.getElementById("downloadLink");
       link.href = canvas.toDataURL("image/png");
       link.style.display = "inline-block";
