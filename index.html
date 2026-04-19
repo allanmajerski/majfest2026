@@ -52,12 +52,25 @@
       margin-bottom: 40px;
     }
 
+    /* Countdown box with Glasto border */
     .countdown-box {
-      background: rgba(255,255,255,0.1);
+      background: rgba(255,255,255,0.08);
       border-radius: 20px;
       padding: 30px 20px;
       backdrop-filter: blur(10px);
+      border: 6px solid #FFD700;
+      box-shadow: 0 0 25px rgba(255,215,0,0.25);
+      position: relative;
       margin-bottom: 40px;
+    }
+
+    .countdown-box::before {
+      content: "";
+      position: absolute;
+      inset: 12px;
+      border: 3px solid white;
+      border-radius: 14px;
+      pointer-events: none;
     }
 
     h2 {
@@ -81,12 +94,31 @@
       padding: 15px;
       flex: 1 1 20%;
       min-width: 70px;
+      position: relative;
     }
 
     .number {
       font-size: clamp(1.8rem, 6vw, 3rem);
       font-weight: bold;
       display: block;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* Animated glow behind numbers */
+    .number::after {
+      content: "";
+      position: absolute;
+      inset: -5px;
+      border-radius: 10px;
+      background: radial-gradient(rgba(255,255,255,0.35), transparent 60%);
+      z-index: -1;
+      animation: pulseGlow 2.4s ease-in-out infinite alternate;
+    }
+
+    @keyframes pulseGlow {
+      0% { opacity: 0.25; transform: scale(1); }
+      100% { opacity: 0.6; transform: scale(1.15); }
     }
 
     .label {
@@ -136,14 +168,13 @@
 <body>
   <div class="container">
 
-    <!-- LOGO (proper placement) -->
-    <img src="logo.jpg" alt="Maj Fest 2026 Logo" class="logo">
+    <img src="logo.jpg" alt="Maj Fest 2026 Logo" class="logo">
 
     <h1>MAJ FEST 2026</h1>
     <p class="festival-date">27 June 2026</p>
 
     <div class="countdown-box">
-      <h2>Tickets On Sale In</h2>
+      <h2>Tickets On Sale In</h2>
 
       <div class="countdown-wrapper" id="timer-display">
         <div class="time-unit">
@@ -164,14 +195,12 @@
         </div>
       </div>
 
-      <!-- Hidden button until countdown finishes -->
       <div id="ticket-button-box" style="display:none;">
-        <a href="tickets.html" class="ticket-button">🎟 Get Your Tickets 🎟</a>
+        <a href="tickets.html" class="ticket-button">🎟 Get Your Tickets 🎟</a>
       </div>
     </div>
   </div>
 
-  <!-- Spotify Player -->
   <div class="spotify-player">
     <iframe style="border-radius:12px"
       src="https://open.spotify.com/embed/track/6vZZtivPrtpggT5SSXsYTy?utm_source=generator"
@@ -181,7 +210,6 @@
   </div>
 
   <script>
-    // Countdown to 25 April 2026 at 09:00
     const targetDate = new Date("2026-04-25T09:00:00").getTime();
 
     function updateTimer() {
@@ -189,7 +217,7 @@
       const distance = targetDate - now;
 
       if (distance < 0) {
-        document.getElementById("timer-display").innerHTML = "<h3>🎉 Tickets Are Now Live!</h3>";
+        document.getElementById("timer-display").innerHTML = "<h3>🎉 Tickets Are Now Live!</h3>";
         document.getElementById("ticket-button-box").style.display = "block";
         return;
       }
@@ -208,7 +236,5 @@
     updateTimer();
     setInterval(updateTimer, 1000);
   </script>
-
 </body>
 </html>
-
