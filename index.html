@@ -34,6 +34,13 @@
       overflow-x: hidden;
     }
 
+    /* iOS Safari doesn't support background-attachment: fixed on body */
+    @supports (-webkit-touch-callout: none) {
+      body {
+        background-attachment: scroll;
+      }
+    }
+
     /* Animated noise grain overlay */
     body::before {
       content: '';
